@@ -71,4 +71,19 @@ Additionally, it is worth mentioning that the EEGNeX model, compared to the LSTM
 ![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/Confusion_NeX.png)
 *Figure 6: Confusion map for the EEGNeX model*
 
+# Conclusions
+Cross-subject experiments on the motor imagery EEG dataset BCIC-IV-2A gives some different conclusions than within-subject ones provided by previous studies. 
+* There is not enough evidence to show that 2D-CNN model is better than 1D-CNN model under $0.05$ significance level. 
+* CNN-GRU model is better than the 2D-CNN model and CNN-LSTM model under cross-subject scenario.
+* Adding Attention layer after CNN layers does not work well under cross-subject scenario.
+* Cross-subject misclassifications frequently involve identifying hand movements as feet or tongue imagery motions.
+* Imagery of feet and tongue motions may elicit learnable cross-subject, cross-channel patterns.
+  
+# References
+[1]: **Chen et al.(2023)**, Toward Reliable Signals Decoding for Electroencephalogram: A Benchmark Study to EEGNeX
 
+[2]: **Brunner et al.(2008)**, BCI Competition 2008 – Graz data set A
+
+[3]: **Liu et al.(2023)**, A study of EEG classification based on attention mechanism and EEGNet Motor Imagination
+
+[4]: **Lawhern et al.(2018)**, EEGNet: A Compact Convolutional Neural Network for EEG-based Brain-Computer Interfaces
