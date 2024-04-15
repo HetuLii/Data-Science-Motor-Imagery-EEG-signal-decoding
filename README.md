@@ -20,13 +20,15 @@ The dataset utilizes the **international 10-20 system** for electrode placement.
 *Figure 1: Timing scheme of the cue-based BCI paradigm*
 ![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/Electrode%20montage.png)
 *Figure 2: Left: Electrode montage corresponding to the international 10-20 system. Right: Electrode montage of the three monopolar EOG channels*
-# Data Processing
+# data_preprocessing.py
 ## Pre-Processing
 Before any processing, each subject gives a dataset with shape $(576, 22000)$. We can impose a butterworth filter ($0.1 Hz$ to $39 Hz$) to reduce noise and irrelevant information. To avoid vanishing/exploding gradient problems, we impose Min-Max Scaling. We then need to expand the dimension such that various models can be trained on the dataset. 
 We first reshape the model to the shape $(576, 22, 1000)$, where axis $1$ denotes the number of electrodes (channels), and the last axis denotes the number of samplings per electrode ($4 \cdot 250 = 1000$). This is already sufficient for models such as Long Short-Term Memory (LSTM) and 1D-CNN model. For models involving 2D-CNN, we need to upscale the dataset again to shape $(576, 1, 22, 1000)$.
 ## Corss-subject dataset
 To check the cross-subject performances of the models, we need to choose one subject and take its dataset as the testing dataset, which will include $576$ data points. The rest eight subjects contribute to the training dataset, which thus includes $4608$ data points. Then, we split them into batches with size $32$, which is for parallelism during optimization. 
-# Model Performance
+# Models.py
+The file *Models.py* includes models: **LSTM**, **1D-CNN**, **2D-CNN**, **CNN-LSTM**, **CNN-GRU**, **EEGNet-8-2**, **EEGNet-Attention**, and **EEGNeX** in sequence. The LSTM and 1D-CNN model extract only temporal features. Hybrid models including CNN-LSTM and CNN-GRU extract first the local spatial features using CNN layers and the temporal features using LSTM/GRU layer. SOTA models such as EEGNet-8-2 model and EEGNeX model are more complex and extract both temporal and spatial features using CNN layers. The model architectures of EEGNet-8-2 model and EEGNeX model are shown below in **Figure 3-4**.
+# Results 
 Training and testing all the $8$ models, we reach the results shown in **Table 1**. We can clearly observe that there are big differences both in-between the subects and in-between the models, and the **EEGNeX** model achieves the best accuracies for tests on seven out of nine subjects. We then make a few model comparisons and further analysis. 
 <div align="center">
 
@@ -59,17 +61,17 @@ From previous experiments, it was stated that Attention mechanism can make up th
 We can observe that there are big differences in accuracies for tests on different subjects. For instance, the accuracies are particularly low for subject 2,5,6. It's interesting to observe that the simpler model **LSTM** has the best accuracy for subject 2. This implicate that the cross-channel interaction modelling in, for instance, EEGNet and EEGNeX models, fails on subject 2. It is very insteresting but out of the project's working scope to study further the brain state of subject 2 and find the causes of the failings. But this result can at least inform us that the superioty of CNN-based model over LSTM model [1] may not be always true in cross-subject scenarios.
 
 ## Confusion Maps
-It is insightful to examine the confusion matrices of various models and subjects. We present four such matrices here in **Figure 3-6**. Notably, contrary to the expected confusion between left-hand and right-hand imagery, misclassifications frequently involve identifying hand movements as feet or tongue imagery motions, which is counterintuitive. This trend is consistent across the subjects and models. 
+It is insightful to examine the confusion matrices of various models and subjects. We present four such matrices here in **Figure 5-8**. Notably, contrary to the expected confusion between left-hand and right-hand imagery, misclassifications frequently involve identifying hand movements as feet or tongue imagery motions, which is counterintuitive. This trend is consistent across the subjects and models. 
 ![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/Confusion_S2.png)
-*Figure 3: Confusion map for the subject 2*
+*Figure 5: Confusion map for the subject 2*
 ![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/Confusion_S3.png)
-*Figure 4: Confusion map for the subject 3*
+*Figure 6: Confusion map for the subject 3*
 
 Additionally, it is worth mentioning that the EEGNeX model, compared to the LSTM model, makes fewer errors in classifying left-hand motions as feet, and feet as tongue, and vice versa. This observation suggests that **imagery of feet and tongue motions may elicit learnable cross-channel patterns**, offering an avenue for further research.
 ![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/Confusion_LSTM.png)
-*Figure 5: Confusion map for the LSTM model*
+*Figure 7: Confusion map for the LSTM model*
 ![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/Confusion_NeX.png)
-*Figure 6: Confusion map for the EEGNeX model*
+*Figure 8: Confusion map for the EEGNeX model*
 
 # Conclusions
 Cross-subject experiments on the motor imagery EEG dataset BCIC-IV-2A gives some different conclusions than within-subject ones provided by previous studies. 
