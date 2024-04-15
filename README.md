@@ -7,6 +7,7 @@ This repository contains a replication study of several baseline and state-of-th
 
 # Dataset: BCIB-IV-2A
 ## Dataset Description
+**The dataset can be downloaded at: https://drive.google.com/drive/folders/1NJPo63BcCKZNOd-rcsdNqzCEgS5X_Jcm?usp=sharing**
 The **BCIC-IV-2A** dataset is recorded from $9$ subjects. The cue-based BCI paradigm consisted the imagination of movement of the left hand (class 1), right hand (class 2), both feet (class 3), and tongue (class 4). Two sessions on different days were recorded for each subject. Each session is comprised of 6 runs separated by short breaks. 
 One run consists of $48$ trials ($12$ for each of the four possible classes), yielding a total of $288$ trials per session.
 
@@ -28,7 +29,13 @@ We first reshape the model to the shape $(576, 22, 1000)$, where axis $1$ denote
 To check the cross-subject performances of the models, we need to choose one subject and take its dataset as the testing dataset, which will include $576$ data points. The rest eight subjects contribute to the training dataset, which thus includes $4608$ data points. Then, we split them into batches with size $32$, which is for parallelism during optimization. 
 # Models.py
 The file *Models.py* includes models: **LSTM**, **1D-CNN**, **2D-CNN**, **CNN-LSTM**, **CNN-GRU**, **EEGNet-8-2**, **EEGNet-Attention**, and **EEGNeX** in sequence. The LSTM and 1D-CNN model extract only temporal features. Hybrid models including CNN-LSTM and CNN-GRU extract first the local spatial features using CNN layers and the temporal features using LSTM/GRU layer. SOTA models such as EEGNet-8-2 model and EEGNeX model are more complex and extract both temporal and spatial features using CNN layers. The model architectures of EEGNet-8-2 model and EEGNeX model are shown below in **Figure 3-4**.
+![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/EEGNet.png)
+*Figure 3: EEGNet model architecture*
+![alt text](https://github.com/HetuLii/Data-Science-Motor-Imagery-EEG-signal-decoding/blob/main/images/EEGNeX.png)
+*Figure 4: EEGNeX model architecture*
 # Results 
+**The list of $72$ confusion matrices are included in:** *list_of_results.pkl*
+
 Training and testing all the $8$ models, we reach the results shown in **Table 1**. We can clearly observe that there are big differences both in-between the subects and in-between the models, and the **EEGNeX** model achieves the best accuracies for tests on seven out of nine subjects. We then make a few model comparisons and further analysis. 
 <div align="center">
 
